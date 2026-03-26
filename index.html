@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Gxoker UBT Elite V34 - Vocab Special</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@500;700;800&family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { 
+            --gold: #f59e0b; 
+            --neon-blue: #06b6d4;
+            --dark-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Montserrat', 'Pyidaungsu', sans-serif; }
+        body { margin: 0; height: 100dvh; background: var(--dark-deep); color: #fff; overflow: hidden; display: flex; flex-direction: column; }
+
+        /* 🚀 Login Screen */
+        #login-screen { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1e1b4b, #020617); padding: 20px; }
+        .super-card { 
+            background: var(--card-bg); backdrop-filter: blur(20px); border: 2px solid var(--gold); 
+            border-radius: 40px; width: 100%; max-width: 420px; padding: 40px 30px;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+            text-align: center; border-bottom: 8px solid var(--gold);
+        }
+        .gx-logo { font-family: 'Orbitron'; font-size: 28px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px var(--gold); margin-bottom: 5px; }
+        .profile-zone { width: 110px; height: 110px; border-radius: 50%; border: 4px dashed var(--neon-blue); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; background: #0f172a; }
+        .profile-zone img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .profile-zone:not(:has(img[style*="display: block"]))::after { content: 'ADD PHOTO'; font-size: 10px; color: var(--neon-blue); font-weight: 800; }
+        
+        .input-box { width: 100%; padding: 18px; border-radius: 20px; border: 1px solid #334155; background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; margin-bottom: 20px; text-align: center; outline: none; }
+        .input-box:focus { border-color: var(--gold); box-shadow: 0 0 15px var(--gold); }
+        .start-btn { width: 100%; padding: 20px; border-radius: 20px; border: none; background: var(--gold); color: #000; font-weight: 900; font-size: 18px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* 📱 Exam HUD */
+        #exam-screen { display: none; flex-direction: column; height: 100dvh; background: #f1f5f9; }
+        .top-bar { display: flex; align-items: center; background: #0f172a; height: 70px; padding: 0 20px; border-bottom: 4px solid var(--gold); }
+        .user-meta { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); }
+        .user-meta img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
+        .timer { margin-left: auto; font-family: 'Orbitron'; font-size: 18px; color: var(--gold); font-weight: 900; }
+
+        .progress-rail { height: 6px; background: #cbd5e1; width: 100%; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.3s; }
+
+        .main-content { display: flex; flex: 1; overflow: hidden; padding: 15px; gap: 15px; }
+        .question-card { flex: 1.2; background: #fff; border-radius: 25px; padding: 30px; border: 1px solid #e2e8f0; overflow-y: auto; }
+        .q-badge { display: inline-block; padding: 5px 12px; background: #0f172a; color: var(--gold); border-radius: 8px; font-size: 11px; font-weight: 900; margin-bottom: 15px; }
+        .q-text { font-size: 18px; line-height: 1.7; color: #0f172a; font-weight: 700; }
+        
+        /* 🔘 Answer Options - Always Visible */
+        .answer-zone { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        .option-item { 
+            background: #fff; border: 2.5px solid #e2e8f0; padding: 18px; border-radius: 20px; 
+            cursor: pointer; display: flex; align-items: center; transition: 0.2s; color: #475569;
+        }
+        .option-item.active { border-color: var(--gold); background: #0f172a; color: var(--gold); transform: scale(1.02); }
+        .opt-circle { width: 30px; height: 30px; border: 2px solid currentColor; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: 900; flex-shrink: 0; }
+
+        .footer-nav { display: flex; height: 85px; background: #fff; padding: 15px; gap: 10px; border-top: 1px solid #e2e8f0; }
+        .nav-btn { flex: 1; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-prev { background: #e2e8f0; color: #475569; }
+        .btn-next { background: var(--gold); color: #000; }
+        .btn-fin { background: var(--danger); color: #fff; flex: 1.5; }
+
+        /* 🏆 Results */
+        #result-screen { position: fixed; inset: 0; z-index: 10000; background: #020617; display: none; flex-direction: column; align-items: center; padding: 40px 20px; overflow-y: auto; }
+        .big-score { font-size: 90px; font-weight: 900; color: var(--gold); font-family: 'Orbitron'; margin: 0; text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        .review-card { background: #fff; color: #000; border-radius: 20px; width: 100%; max-width: 600px; padding: 20px; margin-bottom: 15px; border-left: 10px solid #ddd; }
+        .correct { border-left-color: var(--success); }
+        .wrong { border-left-color: var(--danger); }
+
+        @media (max-width: 768px) { .main-content { flex-direction: column; } .question-card { flex: none; height: 40%; } }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="super-card">
+            <div class="gx-logo">GXOKER ELITE V34</div>
+            <p style="color:#94a3b8; font-size: 11px; font-weight: 700; margin-bottom: 25px; letter-spacing: 2px;">VOCABULARY MASTERY SYSTEM</p>
+            <div class="profile-zone" id="profile-btn">
+                <img id="profile-img-src">
+                <input type="file" id="file-input" hidden accept="image/*">
+            </div>
+            <input type="text" id="name-input" class="input-box" placeholder="CANDIDATE NAME" spellcheck="false">
+            <button class="start-btn" id="start-btn">INITIALIZE SYSTEM</button>
+        </div>
+    </div>
+
+    <div id="exam-screen">
+        <div class="top-bar">
+            <div class="user-meta">
+                <img id="nav-photo" src="">
+                <span id="nav-name" style="font-weight: 900; font-size: 12px; color: #fff;">NAME</span>
+            </div>
+            <div class="timer" id="time-left">20:00</div>
+        </div>
+        <div class="progress-rail"><div class="progress-fill" id="p-bar"></div></div>
+
+        <div class="main-content">
+            <div class="question-card">
+                <div class="q-badge" id="q-badge">QUESTION 01</div>
+                <div class="q-text" id="q-body">System Loading...</div>
+            </div>
+            <div class="answer-zone" id="ans-list">
+                </div>
+        </div>
+
+        <div class="footer-nav">
+            <button class="nav-btn btn-prev" onclick="changeQ(-1)">PREV</button>
+            <button class="nav-btn btn-next" onclick="changeQ(1)">NEXT</button>
+            <button class="nav-btn btn-fin" id="submit-btn">SUBMIT</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1 class="big-score" id="final-score">0</h1>
+        <p style="color:var(--gold); font-weight: 800; letter-spacing: 4px; margin-bottom: 30px;">TOTAL POINTS</p>
+        
+        <button class="start-btn" id="save-img-btn" style="max-width:300px; background: var(--neon-blue); color:#fff; margin-bottom: 20px;">
+            📸 SAVE RESULT IMAGE
+        </button>
+
+        <div id="review-list" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+        <button class="start-btn" style="max-width:250px; margin:20px 0; background:#334155; color:#fff;" onclick="location.reload()">RESTART</button>
+    </div>
+
+<script>
+    const questions = [
+        { q: "1. 근로자가 업무 중에 부상을 당하거나 질병에 걸렸을 때, 국가에서 치료비와 휴업 급여 등을 지급하여 근로자의 생활을 돕는 사회보험 제도입니다.", a: ["고용보험", "산재보험", "국민연금", "건강보험"], c: 1 },
+        { q: "2. 작업장 내에서 화재가 발생했을 때 연기와 유독가스를 외부로 배출하고 신선한 공기를 유입시키기 위해 설치된 창문이나 기계 장치를 이르는 말입니다.", a: ["소화전", "환기구", "방화문", "비상구"], c: 1 },
+        { q: "3. 기계의 회전 부위에 작업자의 옷이나 손이 말려 들어가는 사고를 방지하기 위해 설치하는 덮개나 울타리 형태의 안전장치를 말합니다.", a: ["안전대", "작업 발판", "방호가드", "절연용 보호구"], c: 2 },
+        { q: "4. 높은 곳에서 작업할 때 작업자가 아래로 떨어지는 추락 사고를 예방하기 위해 몸에 착용하고 안전줄을 연결하는 장비입니다.", a: ["안전모", "안전장갑", "안전대", "안전화"], c: 2 },
+        { q: "5. 일정한 기간 동안 근무한 근로자가 회사를 그만둘 때, 사용자가 근로자의 계속 근로 기간 1년에 대하여 30일분 이상의 평균 임금을 지급하는 제도입니다.", a: ["상여금", "퇴직금", "수당", "최저임금"], c: 1 },
+        { q: "6. 근로자가 실제 근로 시간과 관계없이 미리 정해진 연봉이나 월급을 받기로 계약하는 방식으로, 초과 근무 수당 등이 미리 포함되어 있는 경우가 많습니다.", a: ["시급제", "포괄임금제", "일급제", "성과급제"], c: 1 },
+        { q: "7. 기계의 수리, 점검, 청소 작업 중 다른 사람이 기계를 갑자기 작동시키지 못하도록 전원 스위치에 설치하는 표지판과 자물쇠를 통칭하는 용어입니다.", a: ["LOTO(Lock-Out, Tag-Out)", "비상 정지 장치", "감전 방지기", "화재 알람"], c: 0 },
+        { q: "8. 산업 현장에서 화학 물질을 취급할 때 해당 물질의 명칭, 위험성, 응급처치 요령, 보관 방법 등을 상세히 기록하여 비치해야 하는 서류입니다.", a: ["표준근로계약서", "물질안전보건자료(MSDS)", "취업규칙", "급여 명세서"], c: 1 },
+        { q: "9. 밀폐된 공간에서 산소 부족이나 유독가스로 인해 정신을 잃거나 사망하는 사고를 예방하기 위해 작업 전 반드시 측정해야 하는 수치입니다.", a: ["조도", "소음도", "산소 농도", "습도"], c: 2 },
+        { q: "10. 사업주가 근로자의 안전과 보건을 유지하기 위해 현장에 배치해야 하는 사람으로, 안전에 관한 기술적인 사항에 대하여 사업주를 보좌하는 전문가입니다.", a: ["공장장", "안전관리자", "통역사", "구직자"], c: 1 },
+        { q: "11. 일할 능력이 있음에도 불구하고 일자리를 구하지 못한 사람에게 일정 기간 동안 급여를 지급하여 재취업을 돕는 제도입니다.", a: ["보증보험", "실업급여", "상해 보험", "귀국 비용 보험"], c: 1 },
+        { q: "12. 가스나 분진으로 인한 폭발 위험이 있는 장소에서 불꽃이 발생하지 않도록 특수하게 제작된 전기 기기나 조명 기구를 말합니다.", a: ["방폭 기기", "절연 기기", "가열 기기", "냉동 기기"], c: 0 },
+        { q: "13. 작업자가 기계의 위험한 부위에 접근하면 기계가 자동으로 멈추거나 작동하지 않도록 설계된 안전 시스템입니다.", a: ["자동 제어", "인터록", "수동 조작", "원격 조정"], c: 1 },
+        { q: "14. 근로자가 업무와 관련하여 입은 부상이나 질병이 완치된 후에도 신체에 영구적으로 남게 된 정신적, 육체적 손상을 의미합니다.", a: ["일시적 장애", "장해", "피로", "근육통"], c: 1 },
+        { q: "15. 고용노동부에서 정정한 근로 조건의 최저 수준을 정한 법령으로, 모든 사업장은 이 법을 준수하여 근로자를 보호해야 합니다.", a: ["출입국관리법", "산업안전보건법", "근로기준법", "국민연금법"], c: 2 },
+        { q: "16. 물건을 운반하거나 쌓을 때 사용하는 나무나 플라스틱으로 만든 받침대로, 지게차를 이용해 쉽게 옮길 수 있도록 설계된 도구입니다.", a: ["컨테이너", "팔레트", "카트", "상자"], c: 1 },
+        { q: "17. 고용주가 근로자의 동의 없이 임금을 지급하지 않거나 정해진 날짜보다 늦게 주는 행위를 이르는 말입니다.", a: ["임금 체불", "임금 삭감", "임금 동결", "임금 인상"], c: 0 },
+        { q: "18. 작업장에서 소음이 법적 기준치(85dB)를 초과할 경우, 근로자의 청력을 보호하기 위해 지정된 구역을 말합니다. 이곳에서는 반드시 귀마개를 착용해야 합니다.", a: ["금연 구역", "청력 보존 구역", "위험 구역", "출입 금지 구역"], c: 1 },
+        { q: "19. 전선이나 전기 기기의 절연이 파괴되어 전류가 원래의 통로를 벗어나 외부로 흐르는 현상으로, 감전이나 화재의 주요 원인이 됩니다.", a: ["과부하", "누전", "단락", "방전"], c: 1 },
+        { q: "20. 외국인 근로자가 한국에서 일을 하다가 사업장 내 폭언, 폭행, 성희롱 등 부당한 대우를 받았을 때 도움을 요청할 수 있는 국가 기관입니다.", a: ["보건소", "주민센터", "고용노동부", "우체국"], c: 2 }
+    ];
+
+    let current = 0, answers = Array(20).fill(null), clock = 1200, timerId, userPhoto = "";
+
+    document.getElementById('profile-btn').onclick = () => document.getElementById('file-input').click();
+    document.getElementById('file-input').onchange = (e) => {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                userPhoto = ev.target.result;
+                document.getElementById('profile-img-src').src = userPhoto;
+                document.getElementById('profile-img-src').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    document.getElementById('start-btn').onclick = () => {
+        const name = document.getElementById('name-input').value;
+        if(!name.trim()) return alert("နာမည်ထည့်ပါ။");
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'flex';
+        document.getElementById('nav-name').innerText = name.toUpperCase();
+        document.getElementById('nav-photo').src = userPhoto || "https://i.imgur.com/edHMTVH.jpeg";
+        render();
+        timerId = setInterval(() => {
+            clock--;
+            let m = Math.floor(clock/60), s = clock%60;
+            document.getElementById('time-left').innerText = `${m}:${s<10?'0':''}${s}`;
+            if(clock <= 0) finish();
+        }, 1000);
+    };
+
+    function render() {
+        const q = questions[current];
+        document.getElementById('q-badge').innerText = `QUESTION ${current+1} / 20`;
+        document.getElementById('q-body').innerText = q.q;
+        
+        // 🚀 Always Render Options Immediately
+        document.getElementById('ans-list').innerHTML = q.a.map((opt, i) => `
+            <div class="option-item ${answers[current] === i ? 'active' : ''}" onclick="pick(${i})">
+                <div class="opt-circle">${i+1}</div>
+                <div>${opt}</div>
+            </div>
+        `).join('');
+        
+        const progress = (answers.filter(x => x !== null).length / 20) * 100;
+        document.getElementById('p-bar').style.width = `${progress}%`;
+    }
+
+    window.pick = (i) => { answers[current] = i; render(); };
+    window.changeQ = (d) => { if(current+d >= 0 && current+d < 20) { current += d; render(); } };
+
+    function finish() {
+        if(!confirm("Submit exam?")) return;
+        clearInterval(timerId);
+        let score = answers.filter((a, i) => a === questions[i].c).length * 5;
+        document.getElementById('exam-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'flex';
+        document.getElementById('final-score').innerText = score;
+
+        document.getElementById('review-list').innerHTML = questions.map((q, i) => `
+            <div class="review-card ${answers[i] === q.c ? 'correct' : 'wrong'}">
+                <div style="font-weight:900; margin-bottom:8px; font-size:12px;">Q${i+1}. ${answers[i] === q.c ? 'CORRECT' : 'WRONG'}</div>
+                <div style="font-size:14px; margin-bottom:12px; font-weight:700;">${q.q}</div>
+                ${q.a.map((opt, oIdx) => `
+                    <div style="padding:10px; border-radius:10px; margin-top:5px; font-size:12px; font-weight:700; background: ${oIdx === q.c ? '#dcfce7' : (oIdx === answers[i] ? '#fee2e2' : '#f8fafc')}; border: 1px solid ${oIdx === q.c ? '#22c55e' : (oIdx === answers[i] ? '#ef4444' : '#e2e8f0')}">
+                        ${oIdx+1}. ${opt}
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('submit-btn').onclick = finish;
+
+    document.getElementById('save-img-btn').onclick = function() {
+        const btn = this;
+        btn.innerText = "⏳ GENERATING...";
+        html2canvas(document.getElementById('result-screen'), {
+            backgroundColor: "#020617",
+            scale: 2,
+            onclone: (cloned) => {
+                cloned.getElementById('review-list').style.display = 'none';
+                cloned.getElementById('save-img-btn').style.display = 'none';
+                cloned.querySelector('.big-score').insertAdjacentHTML('afterend', 
+                    `<div style="color:var(--gold); font-family:'Orbitron'; font-size:16px; margin-top:10px; text-align:center;">GXOKER UBT ELITE V34 CERTIFICATE</div>`
+                );
+            }
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Gxoker_Result_${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            btn.innerText = "📸 SAVE RESULT IMAGE";
+        });
+    };
+</script>
+</body>
+  </html>
+
